@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var dataSet = wire.NewSet(
+var activitySet = wire.NewSet(
 	repository.NewActivityRepository,
 	service.NewActivityService,
 	controller.NewActivityController,
@@ -20,7 +20,7 @@ var dataSet = wire.NewSet(
 
 func InitActivity(db *gorm.DB) controller.ActivityController {
 	wire.Build(
-		dataSet,
+		activitySet,
 	)
 	return nil
 }

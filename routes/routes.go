@@ -11,13 +11,13 @@ import (
 )
 
 func NewActivityRoutes(db *gorm.DB, route *gin.Engine) {
-	pactivityController := injector.InitActivity(db)
-	pactivityRoute := route.Group("/api/v1/pdata")
-	pactivityRoute.Use(middleware.ErrorHandler())
-	pactivityRoute.Use(cors.Default())
-	pactivityRoute.GET("/", pactivityController.All)
-	pactivityRoute.GET("/:id", pactivityController.FindById)
-	pactivityRoute.POST("/", pactivityController.Insert)
-	pactivityRoute.PUT("/:id", pactivityController.Update)
-	pactivityRoute.DELETE("/:id", pactivityController.Delete)
+	activityController := injector.InitActivity(db)
+	activityRoute := route.Group("/api/v1/activity")
+	activityRoute.Use(middleware.ErrorHandler())
+	activityRoute.Use(cors.Default())
+	activityRoute.GET("/", activityController.All)
+	activityRoute.GET("/:id", activityController.FindById)
+	activityRoute.POST("/", activityController.Insert)
+	activityRoute.PUT("/:id", activityController.Update)
+	activityRoute.DELETE("/:id", activityController.Delete)
 }

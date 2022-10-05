@@ -25,4 +25,4 @@ func InitActivity(db *gorm.DB) controller.ActivityController {
 
 // injector.go:
 
-var dataSet = wire.NewSet(repository.NewActivityRepository, service.NewActivityService, controller.NewActivityController)
+var activitySet = wire.NewSet(repository.NewActivityRepository, service.NewActivityService, controller.NewActivityController)
