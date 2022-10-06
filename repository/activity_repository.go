@@ -9,43 +9,43 @@ import (
 
 type ActivityRepository interface {
 	All() []domain.Activity
-	Create(a domain.Activity) domain.Activity
-	Update(a domain.Activity) domain.Activity
-	Delete(a domain.Activity)
+	Create(activity domain.Activity) domain.Activity
+	Update(activity domain.Activity) domain.Activity
+	Delete(activity domain.Activity)
 	FindById(id uint) (domain.Activity, error)
 }
 
-type ActivityConnection struct {
-	connection *gorm.DB
+type ActivityConnectDB struct {
+	dbConnect *gorm.DB //connect to database
 }
 
-func NewActivityRepository(connection *gorm.DB) ActivityRepository {
-	return &ActivityConnection{connection: connection}
+func NewActivityRepository(db *gorm.DB) ActivityRepository {
+	return &ActivityConnectDB{dbConnect: db} //connect database to interface
 }
 
-func (c *ActivityConnection) All() []domain.Activity {
+func (conn *ActivityConnectDB) All() []domain.Activity {
 	var activity []domain.Activity
-	c.connection.Find(&activity)
+	conn.dbConnect.Find(&activity)
 	return activity
 }
 
-func (c *ActivityConnection) Create(a domain.Activity) domain.Activity {
-	c.connection.Save(&a)
-	return a
+func (conn *ActivityConnectDB) Create(activity domain.Activity) domain.Activity {
+	conn.dbConnect.Save(&activity)
+	return activity
 }
 
-func (c *ActivityConnection) Update(a domain.Activity) domain.Activity {
-	c.connection.Omit("created_at").Save(&a)
-	return a
+func (conn *ActivityConnectDB) Update(activity domain.Activity) domain.Activity {
+	conn.dbConnect.Omit("created_at").Save(&activity)
+	return activity
 }
 
-func (c *ActivityConnection) Delete(a domain.Activity) {
-	c.connection.Delete(&a)
+func (conn *ActivityConnectDB) Delete(activity domain.Activity) {
+	conn.dbConnect.Delete(&activity)
 }
 
-func (c *ActivityConnection) FindById(id uint) (domain.Activity, error) {
+func (conn *ActivityConnectDB) FindById(id uint) (domain.Activity, error) {
 	var activity domain.Activity
-	c.connection.Find(&activity, "id = ?", id)
+	conn.dbConnect.Find(&activity, "id = ?", id)
 	if activity.ID == 0 {
 		return activity, errors.New("id not found")
 	}

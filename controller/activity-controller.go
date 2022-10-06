@@ -13,7 +13,7 @@ import (
 type ActivityController interface {
 	All(context *gin.Context)
 	FindById(context *gin.Context)
-	Insert(context *gin.Context)
+	Insert(context *gin.Context) //
 	Update(context *gin.Context)
 	Delete(context *gin.Context)
 }
@@ -28,8 +28,8 @@ func NewActivityController(activityService service.ActivityService) ActivityCont
 	}
 }
 
-func (c *activityController) All(context *gin.Context) {
-	activity := c.activityService.All()
+func (ac *activityController) All(context *gin.Context) {
+	activity := ac.activityService.All()
 	webResponse := web.WebResponse{
 		Code:   http.StatusOK,
 		Status: "Success",
@@ -39,14 +39,14 @@ func (c *activityController) All(context *gin.Context) {
 	context.JSON(http.StatusOK, webResponse)
 }
 
-func (c *activityController) FindById(context *gin.Context) {
+func (ac *activityController) FindById(context *gin.Context) {
 	idString := context.Param("id")
 	id, err := strconv.ParseUint(idString, 10, 64)
 	ok := helper.NotFoundError(context, err)
 	if ok {
 		return
 	}
-	activity, err := c.activityService.FindById(uint(id))
+	activity, err := ac.activityService.FindById(uint(id))
 	ok = helper.NotFoundError(context, err)
 	if ok {
 		return
@@ -60,14 +60,14 @@ func (c *activityController) FindById(context *gin.Context) {
 	context.JSON(http.StatusOK, webResponse)
 }
 
-func (c *activityController) Insert(context *gin.Context) {
+func (ac *activityController) Insert(context *gin.Context) {
 	var u web.ActivityRequest
 	err := context.BindJSON(&u)
 	ok := helper.InternalServerError(context, err)
 	if ok {
 		return
 	}
-	activity, err := c.activityService.Create(u)
+	activity, err := ac.activityService.Create(u)
 
 	ok = helper.InternalServerError(context, err)
 	if ok {
@@ -83,7 +83,7 @@ func (c *activityController) Insert(context *gin.Context) {
 	context.JSON(http.StatusOK, webResponse)
 }
 
-func (c *activityController) Update(context *gin.Context) {
+func (ac *activityController) Update(context *gin.Context) {
 	var u web.ActivityUpdateRequest
 	idString := context.Param("id")
 	id, err := strconv.ParseUint(idString, 10, 64)
@@ -97,7 +97,7 @@ func (c *activityController) Update(context *gin.Context) {
 	if ok {
 		return
 	}
-	activity, err := c.activityService.Update(u)
+	activity, err := ac.activityService.Update(u)
 	ok = helper.InternalServerError(context, err)
 	if ok {
 		return
@@ -111,14 +111,14 @@ func (c *activityController) Update(context *gin.Context) {
 	context.JSON(http.StatusOK, webResponse)
 }
 
-func (c *activityController) Delete(context *gin.Context) {
+func (ac *activityController) Delete(context *gin.Context) {
 	idString := context.Param("id")
 	id, err := strconv.ParseUint(idString, 10, 64)
 	ok := helper.NotFoundError(context, err)
 	if ok {
 		return
 	}
-	err = c.activityService.Delete(uint(id))
+	err = ac.activityService.Delete(uint(id))
 	ok = helper.NotFoundError(context, err)
 	if ok {
 		return

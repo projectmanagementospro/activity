@@ -10,9 +10,9 @@ import (
 
 type ActivityService interface {
 	All() []domain.Activity
-	Create(b web.ActivityRequest) (domain.Activity, error)
+	Create(request web.ActivityRequest) (domain.Activity, error)
 	FindById(id uint) (domain.Activity, error)
-	Update(b web.ActivityUpdateRequest) (domain.Activity, error)
+	Update(request web.ActivityUpdateRequest) (domain.Activity, error)
 	Delete(id uint) error
 }
 
@@ -20,15 +20,15 @@ type activityService struct {
 	activityRepository repository.ActivityRepository
 }
 
-func NewActivityService(activityRepository repository.ActivityRepository) ActivityService {
-	return &activityService{activityRepository: activityRepository}
+func NewActivityService(activityRepo repository.ActivityRepository) ActivityService {
+	return &activityService{activityRepository: activityRepo}
 }
 
-func (s *activityService) All() []domain.Activity {
-	return s.activityRepository.All()
+func (as *activityService) All() []domain.Activity {
+	return as.activityRepository.All()
 }
 
-func (s *activityService) Create(request web.ActivityRequest) (domain.Activity, error) {
+func (as *activityService) Create(request web.ActivityRequest) (domain.Activity, error) {
 	activity := domain.Activity{}
 
 	err := smapping.FillStruct(&activity, smapping.MapFields(&request))
@@ -37,37 +37,37 @@ func (s *activityService) Create(request web.ActivityRequest) (domain.Activity, 
 		return activity, err
 	}
 
-	return s.activityRepository.Create(activity), nil
+	return as.activityRepository.Create(activity), nil
 }
 
-func (s *activityService) Update(b web.ActivityUpdateRequest) (domain.Activity, error) {
+func (as *activityService) Update(request web.ActivityUpdateRequest) (domain.Activity, error) {
 	activity := domain.Activity{}
-	res, err := s.activityRepository.FindById(b.ID)
+	res, err := as.activityRepository.FindById(request.ID)
 	if err != nil {
 		return activity, err
 	}
-	err = smapping.FillStruct(&activity, smapping.MapFields(&b))
+	err = smapping.FillStruct(&activity, smapping.MapFields(&request))
 	if err != nil {
 		return activity, err
 	}
 	activity.User_id = res.User_id
 
-	return s.activityRepository.Update(activity), nil
+	return as.activityRepository.Update(activity), nil
 }
 
-func (s *activityService) FindById(id uint) (domain.Activity, error) {
-	activity, err := s.activityRepository.FindById(id)
+func (as *activityService) FindById(id uint) (domain.Activity, error) {
+	activity, err := as.activityRepository.FindById(id)
 	if err != nil {
 		return activity, err
 	}
 	return activity, nil
 }
 
-func (s *activityService) Delete(id uint) error {
-	activity, err := s.activityRepository.FindById(id)
+func (as *activityService) Delete(id uint) error {
+	activity, err := as.activityRepository.FindById(id)
 	if err != nil {
 		return err
 	}
-	s.activityRepository.Delete(activity)
+	as.activityRepository.Delete(activity)
 	return nil
 }
