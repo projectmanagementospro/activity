@@ -61,13 +61,13 @@ func (ac *activityController) FindById(context *gin.Context) {
 }
 
 func (ac *activityController) Insert(context *gin.Context) {
-	var u web.ActivityRequest
-	err := context.BindJSON(&u)
+	var request web.ActivityRequest
+	err := context.BindJSON(&request)
 	ok := helper.InternalServerError(context, err)
 	if ok {
 		return
 	}
-	activity, err := ac.activityService.Create(u)
+	activity, err := ac.activityService.Create(request)
 
 	ok = helper.InternalServerError(context, err)
 	if ok {
@@ -84,20 +84,20 @@ func (ac *activityController) Insert(context *gin.Context) {
 }
 
 func (ac *activityController) Update(context *gin.Context) {
-	var u web.ActivityUpdateRequest
+	var request web.ActivityUpdateRequest
 	idString := context.Param("id")
 	id, err := strconv.ParseUint(idString, 10, 64)
 	ok := helper.NotFoundError(context, err)
 	if ok {
 		return
 	}
-	u.ID = uint(id)
-	err = context.BindJSON(&u)
+	request.ID = uint(id)
+	err = context.BindJSON(&request)
 	ok = helper.ValidationError(context, err)
 	if ok {
 		return
 	}
-	activity, err := ac.activityService.Update(u)
+	activity, err := ac.activityService.Update(request)
 	ok = helper.InternalServerError(context, err)
 	if ok {
 		return
