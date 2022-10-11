@@ -16,6 +16,13 @@ import (
 
 // Injectors from injector.go:
 
+func InitSubActivity(db *gorm.DB) controller.SubActivityController {
+	subActivityRepository := repository.NewSubActivityRepository(db)
+	subActivityService := service.NewSubActivityService(subActivityRepository)
+	subActivityController := controller.NewSubActivityController(subActivityService)
+	return subActivityController
+}
+
 func InitActivity(db *gorm.DB) controller.ActivityController {
 	activityRepository := repository.NewActivityRepository(db)
 	activityService := service.NewActivityService(activityRepository)
@@ -26,3 +33,5 @@ func InitActivity(db *gorm.DB) controller.ActivityController {
 // injector.go:
 
 var activitySet = wire.NewSet(repository.NewActivityRepository, service.NewActivityService, controller.NewActivityController)
+
+var subactivitySet = wire.NewSet(repository.NewSubActivityRepository, service.NewSubActivityService, controller.NewSubActivityController)

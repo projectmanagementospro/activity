@@ -54,6 +54,7 @@ func NewRouter() *gin.Engine {
 	@description Init All Route
 	*/
 	routes.NewActivityRoutes(db, router)
+	routes.NewSubActivityRoutes(db, router)
 	router.Use(middleware.ErrorHandler())
 	router.Use(cors.Default())
 
