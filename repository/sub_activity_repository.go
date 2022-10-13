@@ -56,7 +56,7 @@ func (conn *SubActivityConnectDB) IsDReportExist(id uint) (domain.Activity, erro
 	var subactivity domain.Activity
 	conn.dbConnect.Preload("Activity").Find(&subactivity, "id = ?", id)
 	if subactivity.ID == 0 {
-		return subactivity, errors.New("DailyReport id haven't been created yet")
+		return subactivity, errors.New("Activity id haven't been created yet")
 	}
 	return subactivity, nil
 }

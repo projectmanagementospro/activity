@@ -1,9 +1,6 @@
 package config
 
 import (
-	"fmt"
-	"os"
-
 	"activity/helper"
 	"activity/models/domain"
 
@@ -16,13 +13,8 @@ func NewDB() *gorm.DB {
 	err := godotenv.Load()
 	helper.PanicIfError(err)
 
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", dbHost, dbUser, dbPass, dbName, dbPort)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dbURL := "postgres://root:root@172.27.1.3:5432/activity?sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	helper.PanicIfError(err)
 	db.AutoMigrate(&domain.Activity{}, &domain.SubActivity{})
 	return db
